@@ -17,10 +17,11 @@ def create_board(n):
 def is_safe(board, row, col, quadrilha):
     directions = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
 
+
     for dr, dc in directions:
         r, c = row + dr, col + dc
         blocked = False
-        while 0 <= r < n and 0 <= c < n:
+        while (0 <= r < n) and (0 <= c < n) and (not blocked):
             cell = board[r][c]
             if cell == ".":
                 r += dr
@@ -43,18 +44,22 @@ def sees_at_least_two_enemies(board, row, col, quadrilha, n):
     count = 0
     for dr, dc in directions:
         r, c = row + dr, col + dc
-        while 0 <= r < n and 0 <= c < n:
+        go_on = True
+        while (0 <= r < n) and (0 <= c < n) and (go_on):
             cell = board[r][c]
             if cell == ".":
                 r += dr
                 c += dc
                 if count >= 2:
+                    go_on = False
                     return True
                 continue
             elif cell != quadrilha:
                 count += 1
+                go_on = False
                 break
             else:
+                go_on = False
                 break
         if count >= 2:
             return True
@@ -130,9 +135,6 @@ def backtrack(board, b_restantes, c_restantes, total_positions, index):
 
 
 def main():
-    from time import time
-
-    start = time()
     global n
     n = int(sys.argv[1])
     b = int(sys.argv[2])
@@ -142,8 +144,6 @@ def main():
     total_positions = n * n
     backtrack(board, b, c, total_positions, 0)
     print(len(solutions_set))
-    print(time() - start)
-
 
 if __name__ == "__main__":
     main()
